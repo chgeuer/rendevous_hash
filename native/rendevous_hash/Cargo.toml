@@ -1,0 +1,13 @@
+[package]
+name = "rendevous_hash"
+version = "0.1.0"
+authors = ["Dr. Christian Geuer-Pollmann"]
+edition = "2021"
+
+[lib]
+name = "rendevous_hash"
+crate-type = ["cdylib"]
+
+[dependencies]
+rustler = "0.36.2"
+murmur3 = "0.5.2"
