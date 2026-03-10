@@ -11,8 +11,7 @@ defmodule RendevousHash.Elixir do
 
   @impl RendevousHash.Behaviour
   def hash(x) do
-    {:ok, hash} = Murmur3.murmur3_x86_32(to_string(x))
-    hash
+    RendevousHash.Murmur3.hash(to_string(x))
   end
 
   @max_32_bit 0xFFFF_FFFF
