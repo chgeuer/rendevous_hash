@@ -9,21 +9,7 @@ defmodule RendevousHash.Native do
   use Rustler, otp_app: :rendevous_hash, crate: "rendevous_hash"
   @behaviour RendevousHash.Behaviour
 
-  # Override the Rustler-generated on_load to make NIF loading optional.
-  # When the NIF fails to load (e.g., on musl/Alpine), the module still
-  # loads but functions return :erlang.nif_error(:nif_not_loaded).
-  @doc false
-  def rustler_init do
-    :code.purge(__MODULE__)
-
-    {otp_app, path} = @load_from
-    load_path = otp_app |> Application.app_dir(path) |> to_charlist()
-
-    case :erlang.load_nif(load_path, @load_data) do
-      :ok -> :ok
-      {:error, _reason} -> :ok
-    end
-  end
+  @before_compile RendevousHash.Native.GracefulInit
 
   defp murmur_hash(_input), do: :erlang.nif_error(:nif_not_loaded)
 
