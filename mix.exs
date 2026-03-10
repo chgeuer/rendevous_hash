@@ -22,7 +22,8 @@ defmodule RendevousHash.MixProject do
     [
       {:usage_rules, "~> 0.1", only: [:dev]},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:rustler, "~> 0.36"}
+      {:rustler, "~> 0.36"},
+      {:propcheck, "~> 1.4", only: [:test]}
     ]
   end
 
