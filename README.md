@@ -115,6 +115,38 @@ NodeImpactSimulator.run_simulation(nodes,
 NodeImpactSimulator.analyze_distribution_balance(nodes, key_count: 10000)
 ```
 
+## Properties & Guarantees
+
+Rendezvous hashing in this library satisfies the following formally tested properties (verified via property-based tests using [PropCheck](https://hexdocs.pm/propcheck)):
+
+### Determinism
+
+Same inputs always produce the same node ranking. Given the same set of nodes and the same key, the function will always return the identical ordering — no randomness, no hidden state.
+
+### Permutation Invariance
+
+The order in which nodes are supplied does not affect the output. Whether you pass `["a", "b", "c"]` or `["c", "a", "b"]`, the resulting ranking for any key is identical.
+
+### Complete Coverage
+
+The output is always a permutation of the input nodes — every node appears exactly once, none are lost or duplicated.
+
+### Consistent Prefix
+
+Requesting the top-*k* nodes always returns a prefix of the full ranking. If you ask for 3 nodes, you get the first 3 from the complete ordering. This means increasing the replica count never changes which nodes were already selected.
+
+### Minimal Disruption
+
+When a node is removed, only keys that were previously assigned to that node are reassigned. All other keys remain mapped to the same node. This is the key advantage over naive hashing approaches.
+
+### Relative Order Preservation
+
+Removing a node preserves the relative order of all remaining nodes. The reduced ranking equals the full ranking with the removed node filtered out — no reshuffling.
+
+### Cross-Implementation Consistency
+
+The Elixir and Rust implementations produce byte-identical results for all operations: hashing, pre-computation, and ranking.
+
 ## Core Concepts
 
 ### ComputeNode Structure
